@@ -15,49 +15,33 @@ def createIdentityMatrix(n):
 
 
 def LUDecomposition(basematrix, n):
-    matrixU = basematrix.copy()
-    matrixL = createIdentityMatrix(n)
-    matrixStore = []
-    matrixStore.append(copy.deepcopy(matrixU))
+    U = basematrix.copy()
+    L = createIdentityMatrix(n)
+    store = []
+    store.append(copy.deepcopy(U))
     for i in range(0, n):
         for j in range(i + 1, n):
             try:
-                factor = matrixU[j][i] / matrixU[i][i]
+                factor = U[j][i] / U[i][i]
             except:
-                return matrixL, matrixU, matrixStore, False
-            matrixL[j][i] = factor
+                return L, U, store, False
+            L[j][i] = factor
             for k in range(i, n):
-                matrixU[j][k] = matrixU[j][k] - factor * matrixU[i][k]
-        matrixStore.append(copy.deepcopy(matrixU))
-    matrixStore.remove(matrixStore[len(matrixStore) - 1])
-    # check if matrixU is upper triangular
-    if calculateRank(matrixU) != n:
-        return matrixL, matrixU, matrixStore, False
-    return matrixL, matrixU, matrixStore, True
+                U[j][k] = U[j][k] - factor * U[i][k]
+        store.append(copy.deepcopy(U))
+    store.remove(store[len(store) - 1])
+    # check if U is upper triangular
+    if calculateRank(U) != n:
+        return L, U, store, False
+    return L, U, store, True
 
 
 def PLUDecomposition(basematrix, n):
-    matrixU = basematrix.copy()
-    matrixL = createIdentityMatrix(n)
+    U = basematrix.copy()
+    L = createIdentityMatrix(n)
     matrixP = createIdentityMatrix(n)
-    matrixStore = []
-    for i in range(0, n):
-        for j in range(i + 1, n):
-            try:
-                factor = matrixU[j][i] / matrixU[i][i]
-            except:
-                # có số 0 trên đường chéo chính thì đổi hàng
-
-                return matrixL, matrixU, matrixStore, False
-            matrixL[j][i] = factor
-            for k in range(i, n):
-                matrixU[j][k] = matrixU[j][k] - factor * matrixU[i][k]
-        matrixStore.append(copy.deepcopy(matrixU))
-    matrixStore.remove(matrixStore[len(matrixStore) - 1])
-    # check if matrixU is upper triangular
-    if calculateRank(matrixU) != n:
-        return matrixL, matrixU, matrixStore, False
-    return matrixL, matrixU, matrixStore, True
+    store = []
+    store.append(copy.deepcopy(U))
 
 
 def calculateRank(matrix):
